@@ -1,0 +1,60 @@
+---
+title: "tooth_growth"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lattice)
+library(dplyr)
+
+```
+
+# Title
+
+In the second portion of the project, we're going to analyze the ToothGrowth data in the R datasets package.
+
+# Data summary
+
+```{r tooth_growth_data}
+library(datasets)
+data(ToothGrowth)
+summary(ToothGrowth)
+str(ToothGrowth)
+```
+
+# Data plot
+
+We can also use bwplot to show the tooth growth by factors: supp and dose.
+
+```{r}
+boxplot(len~supp*dose, data=ToothGrowth, notch=FALSE, 
+  col=(c("gold","darkgreen")),
+  main="Tooth Growth", xlab="Suppliment and Dose")
+aggregate(ToothGrowth$len,list(ToothGrowth$dose,ToothGrowth$supp)
+          ,FUN=function(x) c(x_mean = mean(x), x_sd = sd(x)))
+```
+
+## Observation
+
+From the plot above, we can see that when dose=05 or dose=1, the teeth grow differently by using supplment OJ0.5 and VC0.5. We will verify that hypotheis in next section.
+
+# Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose.
+
+We will only use dose=1 as example to test our hypothesis that tooth growth different by using different supplements.
+
+```{r}
+oj1   <- ToothGrowth[which(ToothGrowth$dose==1.0 & ToothGrowth$supp=="OJ" ),1]
+vc1   <- ToothGrowth[which(ToothGrowth$dose==1.0 & ToothGrowth$supp=="VC" ),1]
+t1_oj_vc <- t.test(oj1, vc1, paired=FALSE, var.equal=TRUE)
+t1_oj_vc
+```
+
+# Result
+
+We can see a very small p-value < 0.05, then we should reject the hyphothesis and accept the alternative, that different supplements has different effect on the tooth growht when we specifiy the dose=1.0
+
+
+
