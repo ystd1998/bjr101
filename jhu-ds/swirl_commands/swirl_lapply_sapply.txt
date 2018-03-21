@@ -1,0 +1,67 @@
+> head(flags)
+> dim(flags)
+> class(flags)
+
+# apply the class() function to each column of the flags dataset and 
+# store the result in a variable called  cls_list.
+> cls_list <- lapply(flags, class)
+> cls_list
+> class(cls_list)
+
+# As character vector of length one (i.e. "integer" and "vector"), 
+# cls_list can be simplified to a character vector
+> as.character(cls_list)
+
+# get the class of each column of the flags dataset and store the result in cls_vec
+> cls_vect <- sapply(flags, class)
+> class(cls_vect)
+
+
+# total number of countries with the color orange on their flag
+> sum(flags$orange)
+
+# extract the columns containing the color data and
+# store them in a new data frame called flag_colors
+> flag_colors <- flags[, 11:17]
+> head(flag_colors)
+
+# get a list containing the sum of each column of flag_colors
+> lapply(flag_colors, sum)
+# calling sapply() instead of lapply()
+> sapply(flag_colors, sum)
+
+
+# find the proportion of flags (out of 194) containing each color
+> sapply(flag_colors, mean)
+
+
+> flag_shapes <- flags[, 19:23]
+
+#  returns the minimum and maximum of each column of flag_shapes.
+> lapply(flag_shapes, range)
+> sapply(flag_shapes, range)
+> shape_mat <- sapply(flag_shapes, range)
+> class(shape_mat)
+
+
+#  the unique() function returns a vector with all duplicate elements removed
+> unique(c(3, 4, 5, 5, 5, 6, 6))
+> unique_vals <- lapply(flags, unique)
+
+# the length of each element of unique_vals 
+>  sapply(unique_vals, length)
+> sapply(flags, unique)
+
+#  return a list containing the second item from each element of the unique_vals list
+> lapply(unique_vals, function(elem) elem[2])
+
+
+
+
+
+
+
+
+
+
+

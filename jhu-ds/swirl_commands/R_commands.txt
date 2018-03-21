@@ -1,0 +1,45 @@
+
+> iris[iris$Species=='virginica',]
+
+
+> lapply(iris[iris$Species=='virginica',], mean, na.rm=TRUE)
+> apply(iris[iris$Species=='virginica',1:4], 2, mean)
+
+> apply(iris[, 1:4], 2, mean)
+
+#  calculate the average miles per gallon (mpg) by number of cylinders
+>  tapply(mtcars$mpg, mtcars$cyl, mean)
+> sapply(split(mtcars$mpg, mtcars$cyl), mean)
+> with(mtcars, tapply(mpg, cyl, mean))
+
+#  absolute difference between the 
+#    average horsepower of 4-cylinder cars and 
+#    average horsepower of 8-cylinder cars
+>  tapply(mtcars$hp, mtcars$cyl, mean)
+
+>  hpcyl <- tapply(mtcars$hp, mtcars$cyl, mean)
+>  abs(hpcyl['4'] - hpcyl['8'])
+
+
+> summary(), str(), quantile(), table()
+> sum(), any(), all()
+> colSums()
+
+> ftable()
+
+
+> cut(data, break=)
+
+> library(Hmisc), cut2()
+
+> factor()
+
+> library(Hmisc); library(plyr); mutate()
+
+
+> library(reshape2); melt()
+> dcast()
+> tapply()
+
+> split(), 
+> ddply()

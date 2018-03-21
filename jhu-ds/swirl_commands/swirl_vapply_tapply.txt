@@ -1,0 +1,54 @@
+
+# reacquaint with the data
+> dim()
+> head()
+> str()
+> summary() 
+> viewinfo()
+
+# returns a list containing one vector of unique values for each column
+> sapply(flags, unique)
+
+
+# says that you expect each element of the result 
+# to be a numeric vector of length 1.
+> vapply(flags, unique, numeric(1))
+
+#  return a character vector containing the class of each column
+> sapply(flags, class)
+
+#  we expect the class function to return a character vector of length 1 
+>  vapply(flags, class, character(1))
+
+# pull up the documentation.
+> ?tapply
+
+
+# 'landmass' variable takes on integer values between 1 and 6, 
+#  each of which represents a different part of the world
+>  table(flags$landmass)
+
+# 'animate' variable itakes the value 1 
+# if a country's flag contains an animate image
+#  (e.g. an eagle, a tree, a human hand) 
+> table(flags$animate)
+
+# If you take the arithmetic mean of a bunch of 0s and 1s, 
+# you get the proportion of 1s
+
+# apply the mean function to the 'animate' variable separately
+#  for each of the six landmass groups
+# thus giving us the proportion of flags containing an animate image
+# WITHIN each landmass group.
+
+> tapply(flags$animate, flags$landmass, mean) 
+
+# summary of population values (in round millions) for countries
+#  with and without the color red on their flag 
+> tapply(flags$population, flags$red, summary)
+
+
+#  summary of population values for each of the six landmasses.
+> tapply(flags$population, flags$landmass, summary)
+
+

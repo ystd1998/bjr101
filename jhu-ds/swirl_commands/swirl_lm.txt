@@ -1,0 +1,89 @@
+
+# 1. Introduction
+> plot(child ~ parent, galton)
+
+> plot(jitter(child,4) ~ parent,galton)
+
+> regrline <- lm(child ~ parent, galton)
+
+> abline(regrline, lwd=3, col='red')
+
+> summary(regrline)
+
+# 2. Residuals
+> fit <- lm(child ~ parent, galton)
+
+> summary(fit)
+> mean(fit$residuals)
+
+> cov(fit$residuals, galton$parent)
+
+# sqe(ols.slope+sl,ols.intercept+ic) == deviance(fit) + sum(est(sl,ic)ˆ2 )
+# sqe(ols.slope+sl,ols.intercept+ic) == sqe(ols.slope, ols.intercept) +
+   sum(est(sl,ic)ˆ2 )
+
+# extract the intercept from fit$coef
+> ols.ic <- fit$coef[1]
+> ols.slope <- fit$coef[2]
+
+#Here are the vectors of variations or tweaks
+
+sltweak <- c(.01, .02, .03, -.01, -.02, -.03)  #one for the slope
+
+ictweak <- c(.1, .2, .3, -.1, -.2, -.3)  #one for the intercept
+
+lhs <- numeric()
+
+rhs <- numeric()
+ 
+#left side of eqn is the sum of squares of residuals of the tweaked regression line
+
+for (n in 1:6) lhs[n] <- sqe(ols.slope+sltweak[n],ols.ic+ictweak[n])
+
+#right side of eqn is the sum of squares of original residuals + sum of squares of two tweaks
+
+for (n in 1:6) rhs[n] <- sqe(ols.slope,ols.ic) + sum(est(sltweak[n],ictweak[n])^2)
+
+
+
+lhs-rhs
+> all.equal(lhs, rhs)
+
+
+> varChild <- var(galton$child)
+> varRes <- var(fit$residuals)
+> varEst <- var(est(ols.slope, ols.ic))
+
+> all.equal(varChild, varRes+varEst)
+
+> efit <- lm(accel ~ mag+dist, attenu)
+> mean(efit$residuals)
+
+> cov(efit$residuals,  attenu$mag)
+
+#plot the original Galton data points with larger dots for more freq pts
+y <- galton$child
+x <- galton$parent
+freqData <- as.data.frame(table(galton$child, galton$parent))
+names(freqData) <- c("child", "parent", "freq")
+plot(as.numeric(as.vector(freqData$parent)), 
+     as.numeric(as.vector(freqData$child)), 
+     pch = 21, col = "black", bg = "lightblue",
+     cex = .07 * freqData$freq, xlab = "parent", ylab = "child")
+
+#original regression line, children as outcome, parents as predictor
+abline(mean(y) - mean(x) * cor(y, x) * sd(y) / sd(x), #intercept
+       sd(y) / sd(x) * cor(y, x),  #slope
+       lwd = 3, col = "red")
+
+#new regression line, parents as outcome, children as predictor
+abline(mean(y) - mean(x) * sd(y) / sd(x) / cor(y, x), #intercept
+       sd(y) / cor(y, x) / sd(x), #slope
+       lwd = 3, col = "blue")
+
+#assume correlation is 1 so slope is ratio of std deviations
+abline(mean(y) - mean(x) * sd(y) / sd(x), #intercept
+       sd(y) / sd(x),  #slope
+       lwd = 2)
+points(mean(x), mean(y), cex = 2, pch = 19) #big point of intersection
+

@@ -1,0 +1,32 @@
+
+# Confident interval test
+> binom.test(success, size)$conf.int
+
+# 5 event in 94.32days
+> poisson.test(5, 94.32)$conf
+
+
+#show 4 different calls to t.test
+#display as 4 long array
+
+> rbind(
+ 
+     mn + c(-1, 1) * qt(.975, n-1) * s / sqrt(n),
+ 
+     as.vector(t.test(difference)$conf.int),
+  
+     as.vector(t.test(g2, g1, paired = TRUE)$conf.int),
+  
+     as.vector(t.test(extra ~ I(relevel(group, 2)), paired = TRUE, data = sleep)$conf.int)
+
+
+)
+
+
+power.t.test(n = 16, delta = 2 / 4, sd=1, type = "one.sample", alt = "one.sided")$power
+power.t.test(power = .8, delta = 2 / 4, sd=1, type = "one.sample", alt = "one.sided")$n
+power.t.test(power = .8, n=27, sd=1, type = "one.sample", alt = "one.sided")$delta
+
+
+head(pValues)
+sum(pValues<0.05)

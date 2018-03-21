@@ -1,0 +1,43 @@
+
+> data(cars)
+> ?cars
+
+> head(cars)
+
+# Key R commands include
+# dim(),
+# names(), 
+# head(), 
+# tail() and
+# summary().
+> plot(cars)
+
+> plot(x = cars$speed, y = cars$dist)
+> plot(y = cars$speed, x = cars$dist)
+
+> plot(x = cars$speed, y = cars$dist, xlab = "Speed")
+> plot(x = cars$speed, y = cars$dist, ylab = "Stopping Distance")
+> plot(x = cars$speed, y = cars$dist, xlab = "Speed", ylab="Stopping Distance")
+
+> plot(cars, main="My Plot")
+> plot(cars, sub="My Plot Subtitle")
+
+
+# col = red
+>  plot(cars, col=2)
+
+# limiting the x-axis to 10 through 15.
+> plot(cars, xlim = c(10, 15))
+
+# Plot cars using triangles.
+> plot(cars, pch = 2)
+
+
+> data(mtcars)
+> ?boxplot
+> boxplot(mpg ~ cyl, data=mtcars)
+
+> hist(mtcars$mpg)
+
+
+

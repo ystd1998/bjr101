@@ -1,0 +1,26 @@
+> rm(list=ls())
+> ls()
+
+> class(plants)
+> dim(plants)
+> nrow(plants)
+> ncol(plants)
+
+# memory space
+> object.size(plants)
+
+# character vector of column (i.e. variable) names
+> names(plants)
+> head(plants)
+> head(plants,10)
+> tail(plants,15)
+
+>  summary(plants)
+
+
+# see how many times each value actually occurs in the data
+>  table(plants$Active_Growth_Period)
+
+
+# 
+> str(plants)

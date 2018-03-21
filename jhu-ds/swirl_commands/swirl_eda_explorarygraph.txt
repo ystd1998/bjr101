@@ -1,0 +1,52 @@
+
+> head(pollution)
+> dim(pollution)
+> summary(pollution$pm25)
+> names(pollution)
+
+> ppm <- pollution$pm25
+> quantile(ppm)
+
+> boxplot(ppm, col="blue")
+
+# 12 is the EPA standard for air quality
+> abline(h=12) 
+
+> hist(ppm, col="green")
+> rug(ppm)
+
+> hist(ppm, col="green", breaks =100)
+> abline(v=12, lwd=2)
+
+> abline(v=median(ppm), col="magenta", lwd=4)
+
+
+> reg <- table(pollution$region)
+> reg
+
+> barplot(reg, col="wheat", main="Number of Counties in Each Region")
+
+> boxplot(pm25~region, data=pollution, col="red")
+
+> par(mfrow=c(2,1),mar=c(4,4,2,1))
+
+>  east <- subset(pollution, region=="east")
+> head(east)
+> west <- subset(pollution, region=="west")
+
+
+> hist(east$pm25, col="green")
+> > hist(subset(pollution, region=="west")$pm25, col="green")
+
+# evaluates "an R expression in an environment
+| constructed from data"
+> > with(pollution, plot(latitude, pm25))
+> abline(h = 12, lwd = 2, lty = 2)
+
+> plot(pollution$latitude, ppm, col = pollution$region)
+> abline(h = 12, lwd = 2, lty = 2)
+
+> par(mfrow = c(1, 2), mar = c(5, 4, 2, 1))
+> plot(west$latitude, west$pm25, main = "West")
+> plot(east$latitude, east$pm25, main = "East")
+> par(mfrow = c(1, 2), mar = c(5, 4, 2, 1))

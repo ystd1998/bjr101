@@ -1,0 +1,19 @@
+
+> ?Devices
+
+> with(faithful, plot(eruptions, waiting))
+
+> title(main="Old Faithful Geyser data")
+
+> dev.cur()
+
+> pdf(file="myplot.pdf")
+
+> with(faithful, plot(eruptions, waiting))
+> title(main="Old Faithful Geyser data")
+>  dev.cur()
+
+> dev.off()
+
+# copy current plot to PNG file
+> dev.copy(png, file = "geyserplot.png")

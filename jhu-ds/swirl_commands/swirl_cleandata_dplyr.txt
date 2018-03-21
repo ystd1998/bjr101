@@ -1,0 +1,86 @@
+
+>  library(dplyr)
+> packageVersion("dplyr")
+
+> library(dplyr)
+> packageVersion("dplyr")
+
+> mydf <- read.csv(path2csv, stringsAsFactors = FALSE)
+> dim(mydf)
+> head(mydf)
+
+#  working with data in dplyr need to
+# load the data into what the package authors call a 'data frame tbl'
+>  cran <- tbl_df(mydf)
+> cran
+
+# to avoid confusion
+> rm("mydf")
+
+# dplyr -->
+#  select(), filter(), arrange(), mutate(), and summarize().
+
+# select for columns
+> select(cran, ip_id, package, country)
+>  select(cran,r_arch:country)
+> select(cran,country:r_arch)
+> select(cran, -time)
+> 
+
+
+# filter for rows
+> filter(cran, package == "swirl") 
+
+# multi and conditions, seperated by ","
+> filter(cran, r_version == "3.1.1", country == "US")
+> filter(cran, r_version <= "3.0.2", country == "IN")
+> filter(cran, size > 100500, r_os == "linux-gnu" )
+
+# OR condition
+> filter(cran, country == "US" | country == "IN")
+
+>  ?Comparison
+
+
+> is.na(c(3, 5, NA, 10))
+
+# return all rows of cran for which r_version is NOT NA
+> filter(cran, !is.na(r_version) )
+
+
+
+# arrange()
+# --> order the rows of a dataset according to the values of a particular variable.
+> cran2 <- select(cran, size:ip_id)
+
+# arrange cran2 , ip_id in ascending  order
+> arrange(cran2, ip_id)
+
+# ip_id in descending order
+> arrange(cran2, desc(ip_id))
+
+
+# by multiple-variables (columns)
+> arrange(cran2, package, ip_id)
+
+> arrange(cran2, country , desc(r_version), ip_id)
+
+> cran3 <- select(cran, ip_id, package, size)
+> cran3
+
+# mutate
+# --> create a new variable based on the value of one or more variables already in a dataset
+
+# create new variable from old one
+> mutate(cran3, size_mb = size / 2^20)
+> mutate(cran3, size_mb = size / 2^20,  size_gb = size_mb / 2^10)
+> mutate(cran3, correct_size=size+1000)
+
+# summarize(), 
+#  --> collapses the dataset to a single row
+> summarize(cran, avg_bytes = mean(size))
+
+
+
+
+

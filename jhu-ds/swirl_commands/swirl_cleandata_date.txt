@@ -1,0 +1,65 @@
+
+>  Sys.getlocale("LC_TIME")
+> library(lubridate)
+> help(package = lubridate)
+> this_day <- today() 
+> this_day 
+> month(this_day)
+
+> wday(this_day)
+> wday(this_day, label=TRUE)
+
+> this_moment <- now()
+> this_moment
+> hour(this_moment)
+
+
+> ymd("1989-05-17")
+> my_date <- ymd("1989-05-17")
+> my_date
+
+> class(my_date) --> POSIXct
+> ymd("1989 May 17")
+>  mdy("March 12, 1975")
+
+> dmy(25081985)
+> ymd("1920/1/2")
+>  ymd_hms(dt1)
+> hms("03:22:14")
+
+> dt2
+[1] "2014-05-14" "2014-09-22" "2014-07-11"
+
+> ymd(dt2)
+
+
+> update(this_moment, hours = 8, minutes = 34, seconds = 55).
+> this_moment <- update(this_moment, hours = 8, minutes = 34, seconds = 55)
+> this_moment
+
+> nyc <- now(tz="America/New_York")
+> nyc
+
+
+> depart <- nyc + days(2)
+> depart
+
+> depart <- update(depart, hours=17, minutes=34)
+> depart
+
+> arrive <- depart + hours(15) + minutes(50)
+> ?with_tz
+
+> arrive <- with_tz(arrive, tz="Asia/Hong_Kong")
+> arrive
+
+> last_time <- mdy("June 17, 2008", tz="Singapore")
+> last_time
+
+> how_long <- interval(last_time, arrive)
+> as.period(how_long)
+
+
+> stopwatch()
+
+

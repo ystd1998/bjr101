@@ -1,0 +1,57 @@
+
+# simulate rolling four six-sided dice
+> sample(1:6, 4, replace = TRUE)
+
+# WITHOUT replacement
+> sample(1:6, 4)
+
+# predefined variable in R containing a vector of all 26 letters
+> LETTERS
+
+# permute all 26 letters 
+> sample(LETTERS)
+
+
+# draw a sample of size 100 from the vector c(0,1), with replacement
+#  prob = c(0.3, 0.7)
+> flips <- sample(c(0,1), 100, prob=c(0.3, 0.7), replace = TRUE)
+> flips
+> sum(flips)
+
+
+> ?rbinom
+
+#  the number of 'successes' (heads) (==1) -- number of observations
+# given number of independent 'trials' (==100) -- size of each observation
+> rbinom(1, size = 100, prob = 0.7)
+
+
+# request 100| observations
+# each of size 1
+> flips2 <- rbinom(100, size = 1, prob = 0.7)
+> flips2
+> sum(flips2)
+
+
+
+> ?rnorm
+# generate 10 random numbers
+>  rnorm(10)
+
+# mean -- 100
+# sd -- 25
+> rnorm(10, 100, 25)
+
+
+# 5 random values from a Poisson distribution with mean 10
+> rpois(5, 10)
+
+# perform this operation 100 times.
+> my_pois <- replicate(100, rpois(5, 10)) 
+
+#  replicate() created a matrix, each column of which contains 5 random numbers
+> my_pois
+
+> cm <- colMeans(my_pois)
+> hist(cm)
+

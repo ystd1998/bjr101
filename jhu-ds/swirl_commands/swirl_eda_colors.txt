@@ -1,0 +1,69 @@
+
+> sample(colors(), 10)
+
+> pal <- colorRamp(c("red","blue"))
+> pal(0)
+> pal(1)
+> pal(0.5)
+
+> pal(seq(0,1,len=6))
+
+> p1 <- colorRampPalette( c("red","blue" ))
+> p1(2)
+> p1(6)
+
+> p2 <- colorRampPalette( c("red", "yellow"))
+> p2(2)
+> p2(10)
+
+# showMe from: R documentation pages (color.scale)
+> showMe(p1(20))
+> showMe(p2(20))
+
+> showMe
+function(cv){
+  myarg <- deparse(substitute(cv))
+  z<- outer( 1:20,1:20, "+")
+  obj<- list( x=1:20,y=1:20,z=z )
+  image(obj, col=cv, main=myarg  )
+}
+<environment: 0xdd35230>
+
+
+
+> p1
+
+function (n) 
+{
+    x <- ramp(seq.int(0, 1, length.out = n))
+    if (ncol(x) == 4L) 
+        rgb(x[, 1L], x[, 2L], x[, 3L], x[, 4L], maxColorValue = 255)
+    else rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)
+}
+<bytecode: 0x47b57a0>
+<environment: 0xa1839d8>
+
+
+
+> ?rgb
+
+> p3 <- colorRampPalette (c("blue", "green"), alpha=0.5)
+> p3(5)
+
+> plot(x, y, pch=19, col=rgb(0, .5, .5))
+> plot(x, y, pch=19, col=rgb(0, .5, .5, .3))
+
+> cols <- brewer.pal(3,"BuGn")
+
+> showMe(cols)
+
+> pal <- colorRampPalette (cols)
+> showMe(pal(20))
+
+
+> image(volcano, col=pal(20))
+
+> image(volcano, col=p1(20) )
+
+
+

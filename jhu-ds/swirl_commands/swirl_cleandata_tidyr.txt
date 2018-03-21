@@ -1,0 +1,101 @@
+> library(tidyr)
+> library(readr)
+
+> gather(students, sex, count, -grade)
+> res <- gather(students2, sex_class, count, -grade)
+> separate(data=res, col=sex_class, into=c("sex", "class"))
+
+> students2 %>%
+  gather( sex_class,  count, -grade ) %>%
+  separate( sex_class, c("sex", "class")) %>%
+  print
+  
+> students3 %>%
+  gather( class, grade, class1:class5 , na.rm = TRUE) %>%
+  print  
+  
+> students3 %>%
+  gather(class, grade, class1:class5, na.rm = TRUE) %>%
+  spread( test, grade) %>%
+  print  
+  
+> parse_number("class5")  
+> students3 %>%
+  gather(class, grade, class1:class5, na.rm = TRUE) %>%
+  spread(test, grade) %>%
+  ### Call to mutate() goes here %>%
+  mutate(class = parse_number(class)) %>%
+  print
+  
+> student_info <- students4 %>%
+  select( id, name, sex ) %>%
+  print  
+  
+> student_info <- students4 %>%
+  select(id, name, sex) %>%
+  ### Your code here %>%
+  unique() %>%
+  print  
+  
+> gradebook <- students4 %>%
+  ### Your code here %>%
+  select(id, class, midterm, final) %>%
+  print  
+  
+> passed <- passed %>%
+  + mutate(status="passed")  
+  
+> failed <- failed %>%
++ mutate(status="failed")
+
+> bind_rows(passed, failed)  
+
+# Accomplish the following three goals:
+#
+# 1. select() all columns that do NOT contain the word "total",
+# since if we have the male and female data, we can always
+# recreate the total count in a separate column, if we want it.
+# Hint: Use the contains() function, which you'll
+# find detailed in 'Special functions' section of ?select.
+#
+# 2. gather() all columns EXCEPT score_range, using
+# key = part_sex and value = count.
+#
+# 3. separate() part_sex into two separate variables (columns),
+# called "part" and "sex", respectively. You may need to check
+# the 'Examples' section of ?separate to remember how the 'into'
+# argument should be phrased.
+#
+> sat
+# A tibble: 6 x 10
+  score_range read_male read_fem read_total math_male math_fem math_total write_male write_fem write_total
+        <chr>     <int>    <int>      <int>     <int>    <int>      <int>      <int>     <int>       <int>
+1     700-800     40151    38898      79049     74461    46040     120501      31574     39101       70675
+2     600-690    121950   126084     248034    162564   133954     296518     100963    125368      226331
+3     500-590    227141   259553     486694    233141   257678     490819     202326    247239      449565
+4     400-490    242554   296793     539347    204670   288696     493366     262623    302933      565556
+5     300-390    113568   133473     247041     82468   131025     213493     146106    144381      290487
+6     200-290     30728    29154      59882     18788    26562      45350      32500     24933       57433
+
+
+
+sat %>%
+  select(-contains(total)) %>%
+  gather(key = part_sex, value = count, -score_range) %>%
+  ### <Your call to separate()> %>%
+  separate( part_sex, c("part", "sex") ) %>%
+  print
+  
+  
+sat %>%
+  select(-contains("total")) %>%
+  gather(part_sex, count, -score_range) %>%
+  separate(part_sex, c("part", "sex")) %>%
+  ### <Your call to group_by()> %>%
+  group_by(part, sex) %>%
+  mutate( total = sum(count),
+          prop = count/total
+  ) %>% print
+
+  
+  
