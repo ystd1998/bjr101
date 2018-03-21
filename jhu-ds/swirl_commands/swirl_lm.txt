@@ -87,3 +87,153 @@ abline(mean(y) - mean(x) * sd(y) / sd(x), #intercept
        lwd = 2)
 points(mean(x), mean(y), cex = 2, pch = 19) #big point of intersection
 
+# 4. Residual Variation
+
+> fit <- lm(child ~ parent, galton)
+
+> sqrt(sum(fit$residuals^2)/(n-2))
+> summary(fit)$sigma # ==
+> sqrt(deviance(fit)/(n-2))
+
+> mu <- mean(galton$child)
+> sTot <- sum((galton$child-mu)^2)
+
+> sRes <- deviance(fit)
+> 1.-sRes/sTot ==> R^2
+> summary(fit)$r.squared #  ==
+
+> cor(galton$child, galton$parent)^2
+
+
+# 5. Multivariable Regression
+
+> ones <- rep(1, nrow(galton))
+
+# dont use the default interception, 
+# instead use the variable ones we created
+> lm(child ~ ones + parent -1, galton)
+> lm(child ~ parent, galton) # ==
+
+# Thus, subtracting
+| the mean is equivalent to replacing a variable by the residual of its regression against 1.
+
+> lm(child ~ 1, galton) # == mean(galton$child)
+
+# The general technique is to pick one predictor and to replace all other variables by the residuals of
+| their regressions against that one. 
+
+# fit togather
+> fit <- lm(Volume ~ Girth + Height + Constant -1, trees)
+
+# fit one by one
+> trees2 <- eliminate("Girth", trees)
+> head(trees2)
+
+> fit2 <- lm(Volume ~ Height + Constant -1, trees2)
+
+> lapply(list(fit, fit2), coef)
+
+# Regress the given variable on the given predictor,
+# suppressing the intercept, and return the residual.
+regressOneOnOne <- function(predictor, other, dataframe){
+  # Point A. Create a formula such as Girth ~ Height -1
+  formula <- paste0(other, " ~ ", predictor, " - 1")
+  # Use the formula in a regression and return the residual.
+  resid(lm(formula, dataframe))
+}
+
+# Eliminate the specified predictor from the dataframe by
+# regressing all other variables on that predictor
+# and returning a data frame containing the residuals
+# of those regressions.
+eliminate <- function(predictor, dataframe){
+  # Find the names of all columns except the predictor.
+  others <- setdiff(names(dataframe), predictor)
+  # Calculate the residuals of each when regressed against the given predictor
+  temp <- sapply(others, function(other)regressOneOnOne(predictor, other, dataframe))
+  # sapply returns a matrix of residuals; convert to a data frame and return.
+  as.data.frame(temp)
+}
+
+
+
+
+# 6. MultiVar Examples
+
+
+makelms <- function(){
+  # Store the coefficient of linear models with different independent variables
+  cf <- c(coef(lm(Fertility ~ Agriculture, swiss))[2], 
+          coef(lm(Fertility ~ Agriculture + Catholic,swiss))[2],
+          coef(lm(Fertility ~ Agriculture + Catholic + Education,swiss))[2],
+          coef(lm(Fertility ~ Agriculture + Catholic + Education + Examination,swiss))[2],
+          coef(lm(Fertility ~ Agriculture + Catholic + Education + Examination +Infant.Mortality, swiss))[2])
+  print(cf)
+}
+
+# Regressor generation process 1.
+rgp1 <- function(){
+  print("Processing. Please wait.")
+  # number of samples per simulation
+  n <- 100
+  # number of simulations
+  nosim <- 1000
+  # set seed for reproducability
+  set.seed(4321)
+  # Point A:
+  x1 <- rnorm(n)
+  x2 <- rnorm(n)
+  x3 <- rnorm(n)
+  # Point B:
+  betas <- sapply(1 : nosim, function(i)makelms(x1, x2, x3))
+  round(apply(betas, 1, var), 5)
+}
+
+# Regressor generation process 2.
+rgp2 <- function(){
+  print("Processing. Please wait.")
+  # number of samples per simulation
+  n <- 100
+  # number of simulations
+  nosim <- 1000
+  # set seed for reproducability
+  set.seed(4321)
+  # Point C:
+  x1 <- rnorm(n)
+  x2 <- x1/sqrt(2) + rnorm(n) /sqrt(2)
+  x3 <- x1 * 0.95 + rnorm(n) * sqrt(1 - 0.95^2)
+  # Point D:
+  betas <- sapply(1 : nosim, function(i)makelms(x1, x2, x3))
+  round(apply(betas, 1, var), 5)
+}
+
+# swiss data
+
+> all <- lm( Fertility ~ ., data=swiss)
+> summary(all)
+
+> summary(lm(Fertility ~ Agriculture, data=swiss))
+
+> cor(swiss$Examination, swiss$Education)
+> cor(swiss$Agriculture, swiss$Education)
+
+> makelms() 
+
+> ec <- swiss$Examination+swiss$Catholic
+
+> efit <- lm(Fertility ~ . + ec, data=swiss)
+
+> all$coefficients-efit$coefficients
+
+
+
+
+
+
+
+
+
+
+
+
+
