@@ -227,13 +227,90 @@ rgp2 <- function(){
 
 
 
+# 7. MultiVar Examples2
+# R function sapply to find out the classes of the columns of the data.
+> sapply(InsectSprays, class)
+
+> fit <- lm(count ~ spray, data=InsectSprays)
+> fit$coefficients
+> summary(fit)$coef
+> est <- summary(fit)$coef[,1]
+
+> nfit <- lm(count ~ spray-1, data=InsectSprays)
+> summary(nfit)$coef
+
+> spray2 <- relevel(InsectSprays$spray, "C")
+
+> fit2 <- lm(InsectSprays$count ~ spray2)
+
+# 8: MultiVar Examples3
+> dim(hunger)
+> names(hunger)
+
+> fit <- lm(Numeric ~ Year, hunger)
+
+> summary(fit)$coef
+
+lmF <- lm(hunger$Numeric[hunger$Sex=="Female"] ~ hunger$Year[hunger$Sex=="Female"]) 
+ lmF <- lm(Numeric[Sex=="Female"] ~| Year[Sex=="Female"],hunger)
+
+> lmM <- lm(hunger$Numeric[hunger$Sex=="Male"] ~ hunger$Year[hunger$Sex=="Male"])
+
+> lmBoth <- lm(Numeric ~ Year+Sex, hunger)
+
+> summary(lmBoth)
 
 
 
+> lmInter <- lm(Numeric ~ Year+Sex+Sex*Year, data=hunger)
+> summary(lmInter)
 
 
 
+# 9: Residuals Diagnostics and Variation 
+
+> fit <- lm(y ~ x, out2)
+> plot(fit, which=1)
+> fitno <- lm(y ~ x, out2[-1,])
+> plot(fitno, which=1)
+
+# see the change induced by including the influential first sample.
+> coef(fit)-coef(fitno)
+
+#  dfbeta, does the equivalent calculation for every sample in the data.
+>  head(dfbeta(fit)) 
+
+# calcluate  influence, sometimes leverage, and sometimes hat value. 
+> resno <- out2[1, "y"] - predict(fitno, out2[1,])
+
+> 1-resid(fit)[1]/resno
+>  head(hatvalues(fit))
+
+> sigma <- sqrt(sum(fit$residuals^2)/fit$df.residual)
+> rstd <- resid(fit)/(sigma * sqrt(1-hatvalues(fit)))
+# === rstandard(fit)
+> head(cbind(rstd, rstandard(fit)))
+
+#  shows the square root of standardized residuals against fitted values
+> plot(fit,which=3)
+
+# a QQ plot of standardized residuals against normal with constant variance.
+> plot(fit, which=2)
 
 
+# Studentized residuals,
+> sigma1 <- sqrt(sum(fitno$residuals^2)/fitno$df.residual)
+> resid(fit)[1]/(sigma1*sqrt(1-hatvalues(fit)[1]))
 
+# rstudent, calculates Studentized residuals for each sample 
+>  head(rstudent(fit))
+
+# Cook's distance
+
+> dy <- predict(fitno, out2)-predict(fit, out2)
+>  sum(dy^2)/(2*sigma^2) # 2 is the number of predictor
+# ==
+> cooks.distance(fit)[1] 
+
+> plot(fit, which=5)
 
