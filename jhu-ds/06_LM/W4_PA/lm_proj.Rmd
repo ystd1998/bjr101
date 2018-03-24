@@ -1,0 +1,113 @@
+---
+title: "Linear Regression Models Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This project studys the "mtcars" data to for Motor Trend, a magazine about the automobile industry. The main questions in the studys are:
+  1. If automatic or manual transmission better for MPG (miles per gallon);
+  2. quantify the difference.
+  
+## Load the data
+
+```{r}
+data(mtcars)
+```
+
+## exploratory 
+
+```{r cars }
+str(mtcars)
+names(mtcars)
+```
+
+Use plot to show the distribution difference between automatic or manual transmission:
+
+```{r}
+boxplot(mpg ~ am, data = mtcars, col = "red", ylab = "MPG")
+```
+
+## Observations:
+
+From the prot, we can see there is different impact of automatic or manual transmission. We will use regression to quantify the difference.
+
+## Simple regression model
+
+First, we only use very simple regression model, using only "AM" as predictor, and "MPG" as outcome.
+
+```{r}
+fit1 <- lm(mpg ~ factor(am), data=mtcars)
+summary(fit1)
+```
+
+From the summary,there is 7.245 MPG increase on averge on manual transmission (AM=1) over automatic transmission (AM=0).
+Further check the confidence level:
+
+```{r}
+confint(fit1)
+```
+
+
+Which shows the 95% confidence level is from 3.64 to 10.84, therefore, we can reject the hypothesis automatical transmission car is same as automatical transmission car on MPG, in deed, the transmission type indeed can affect the MPG.
+
+## Residual plot
+
+Finally, we will chech the regression model to see if its residual plot is close to normal distribution.
+
+```{r}
+plot(fit1, which=2)
+mean(fit1$residuals)
+```
+
+which shows residual is close to normal distribution, and its mean close to zero.
+
+## A more complicated model:
+
+Let 's study second model that add some more variables to the regression model. The factors are "cyl": Number of cylinders, and "hp": Gross horsepower.
+
+```{r}
+fit2 <- lm(mpg ~ factor(am)+factor(cyl)+hp, data=mtcars)
+summary(fit2)
+```
+
+From the summary,there is 4.15786 MPG increase on averge on manual transmission (AM=1) over automatic transmission (AM=0), which is different with previous model, where the coefficant is 7.245. Since there is more factors (correcated or uncorrected ) impact the MPG model.
+
+## Correction between the predictors:
+
+```{r}
+cor(mtcars$am, mtcars$cyl)
+cor(mtcars$am, mtcars$hp)
+```
+
+We can see that there is negative correction between the "AM" and "cyl", "hp" factors, therefore, the coefficent of "AM" is negative impacted by the 2 new factors.
+
+## Confidience level
+
+Further check the confidence level:
+
+```{r}
+confint(fit2)
+```
+
+The 95% confidence interval of AM is still above zero, from 1.57 to 6.736, therefore, we can still have the conclusion that transmission type still have different impact on the MPG.
+
+## Residual plot and summary
+
+
+```{r}
+plot(fit2, which=2)
+mean(fit2$residuals)
+```
+
+
+From the plot and brief summary, the residulal distribution is very close to normal distribution, which confirmed that our linear regression is a valid one.
+
+## Overall executive summary
+
+From this data study of mtcars dataset, we can conclude that  manual transmission better for MPG then automatic transmission. We use 2 different model toe support our conclusion, and also study the internal data correction can have some impact on multi variable linear regression's model coefficent.
+
