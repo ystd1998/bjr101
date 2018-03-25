@@ -1,0 +1,49 @@
+---
+title: "Data Visualization Project 2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+This data visualization project will show the [Astro Physics collaboration network](https://snap.stanford.edu/data/ca-AstroPh.html) from [Stanford Large Network Dataset Collection](http://snap.stanford.edu/data/index.html). We want to use the data to show scientific collaborations between authors papers submitted to Astro Physics category.
+
+## Prepare data
+
+```{r}
+library(rCharts)
+library(MASS)
+library(ggplot2)
+library(igraph)
+library(networkD3)
+data <- read_graph('astro-ph/astro-ph.gml', 'gml')
+```
+
+## sample data
+
+The data sets has total 18772 nodes	and 198110 edges, we will sample the network comprised of 1000 authors. The plot shows the connected between authors and co-authors.
+
+
+```{r}
+
+indices <- sample(1:16706, 15706)
+d2 <- delete.vertices(data, indices)
+df <- get.data.frame(d2, 'both')
+df$edges$from <- df$vertices$label[df$edges$from]
+df$edges$to <- df$vertices$label[df$edges$to]
+
+simpleNetwork(df$edges, zoom=TRUE)
+```
+
+## Particular aspects of visualization
+
+From the plot we can see that most authors have less than 4-5 co-authors, while only small amount of author have far much more co-authors.
+
+## Summary
+
+In this project, we use data visualization from R programming language to explore Astro Physics collaboration network, and it shows some patters about the author and co-author associations, i.e. most of the association involves less than 4-5 people, while a few percentage of them have far more amount of assocation, probably they are famous profersor that have lots of students as authors.
+
+
