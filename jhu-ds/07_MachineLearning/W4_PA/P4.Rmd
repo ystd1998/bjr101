@@ -30,6 +30,7 @@ testing_0  <- read.csv("pml-testing.csv")
 # head(training_0)
 # str(training_0)
 dim(training_0)
+#names(training_0)
 ```
 
 There are total 160 columns of data, we will do some data cleaning. 
@@ -40,6 +41,7 @@ There are total 160 columns of data, we will do some data cleaning.
 removeColumns <- grep("timestamp", names(training_0))
 training_1 <- training_0[,-c(1, removeColumns )]
 test_1 <- testing_0 [,-c(1, removeColumns )]
+#names(training_1)
 ```
 
 2. convert factor variabels to integers for correlation evaluations:
@@ -86,6 +88,8 @@ So from the plots we can see that there isn't any seperation in the features eve
 ```{r}
 training_2 <- training_1[, colSums(is.na(training_1)) == 0] 
 testing_2  <- test_1[, colSums(is.na(test_1)) == 0] 
+
+dim(training_2)
 ```
 
 2. Further slice the training data into test-validation test set:
@@ -95,17 +99,23 @@ set.seed(334)
 inTrain <- createDataPartition(training_2$classe, p=0.70, list=F)
 trainData <- training_2[inTrain, ]
 testData <- training_2[-inTrain, ]
+dim(trainData)
 ```
 
 
 ### PCA method
 
-Since there are many features, we will use Random Forest algorithm because it automatically selects most relavant features and is robust to correlated covariates & outliers in general. We will use 8-fold cross validation when applying the algorithm.
+Since there are many features, we will use Random Forest algorithm because it automatically selects most relavant features and is robust to correlated covariates & outliers in general. We will use 5-fold cross validation when applying the algorithm.
 
 ```{r}
 library(randomForest)
-control_rf <- trainControl(method="cv", 8)
-model_rf <- train(classe ~ ., data=trainData, method="rf", trControl=control_rf, ntree=250)
-model_rf
+rf_model <-train( classe ~ ., data=trainData, method="rf",
+                 trControl=trainControl(method="cv",number=5),
+                 prox=TRUE, allowParallel=TRUE)
+print(rf_model)
+```
+
+```{r}
+print(rf_model$finalModel)
 ```
 
