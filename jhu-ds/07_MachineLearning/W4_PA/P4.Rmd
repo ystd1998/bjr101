@@ -20,8 +20,8 @@ library(Rmisc)
 library(ggplot2)
 library(caret)
 
-training_0 <- read.csv("pml-training.csv")
-testing_0  <- read.csv("pml-testing.csv")
+training_0 <- read.csv("pml-training.csv", na.strings=c("NA",""))
+testing_0  <- read.csv("pml-testing.csv", na.strings=c("NA",""))
 ```
 
 ## Summary and data Exploratory 
@@ -38,6 +38,8 @@ There are total 160 columns of data, we will do some data cleaning.
 1. remove timestamp related columns.
 
 ```{r}
+training_0  <- training_0[,7:160]
+testing_0   <- testing_0[,7:160]
 removeColumns <- grep("timestamp", names(training_0))
 training_1 <- training_0[,-c(1, removeColumns )]
 test_1 <- testing_0 [,-c(1, removeColumns )]
@@ -88,7 +90,6 @@ So from the plots we can see that there isn't any seperation in the features eve
 ```{r}
 training_2 <- training_1[, colSums(is.na(training_1)) == 0] 
 testing_2  <- test_1[, colSums(is.na(test_1)) == 0] 
-
 dim(training_2)
 ```
 
@@ -115,7 +116,31 @@ rf_model <-train( classe ~ ., data=trainData, method="rf",
 print(rf_model)
 ```
 
+The final model is:
+
 ```{r}
 print(rf_model$finalModel)
+```
+
+Now, we will test our final model on the testData:
+
+```{r}
+rf_predict <- predict(rf_model, testData)
+confusionMatrix(testData$classe, rf_predict)
+```
+
+We can see that overall accuray for our predictions for the 5-classes are around 98% to 99%.
+
+We can further verify our model on the original test data:
+
+```{r}
+rf_test_2 <- predict(rf_model, testing_2)
+#rf_test_2
+```
+
+Finally, we can print our randomtree model:
+
+```{r}
+# getTree(rf_model$finalModel, k=1)
 ```
 
