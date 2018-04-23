@@ -1,0 +1,22 @@
+---
+title: "R Markdown features a plot created with Plotly"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(plotly)
+```
+
+## Date: `r format(Sys.time(), '%B %d, %Y')`
+
+```{r, echo = FALSE, output=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+d <- diamonds[sample(nrow(diamonds), 1000), ]
+
+p <- plot_ly(  d, x = ~carat ) %>%
+  add_trace(y = ~price, type="scatter", name = 'price', size=~carat, 
+            color=~carat, mode = 'markers')
+p
+```
+

@@ -1,0 +1,146 @@
+---
+title: "Course Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction 
+
+In this project, we will use data from [Weight Lifting Exercise Dataset](http://groupware.les.inf.puc-rio.br/har), specifically, we will use accelerometers on the belt, forearm, arm, and dumbell of 6 participants. 
+
+The participants were asked to perform barbell lifts correctly and incorrectly in 5 different ways, then we will use the data to prediction the quality of the barbell lift exercise.
+
+## Load the data
+
+```{r}
+library(Rmisc)
+library(ggplot2)
+library(caret)
+
+training_0 <- read.csv("pml-training.csv", na.strings=c("NA",""))
+testing_0  <- read.csv("pml-testing.csv", na.strings=c("NA",""))
+```
+
+## Summary and data Exploratory 
+
+```{r}
+# head(training_0)
+# str(training_0)
+dim(training_0)
+#names(training_0)
+```
+
+There are total 160 columns of data, we will do some data cleaning. 
+
+1. remove timestamp related columns.
+
+```{r}
+training_0  <- training_0[,7:160]
+testing_0   <- testing_0[,7:160]
+removeColumns <- grep("timestamp", names(training_0))
+training_1 <- training_0[,-c(1, removeColumns )]
+test_1 <- testing_0 [,-c(1, removeColumns )]
+#names(training_1)
+```
+
+2. convert factor variabels to integers for correlation evaluations:
+
+```{r}
+classeLevels <- levels(training_1$classe)
+training_2 <- data.frame(data.matrix(training_1))
+training_2$classe <- factor(training_2$classe, labels=classeLevels)
+test_2 <- data.frame(data.matrix(test_1))
+```
+
+
+3. Check some correlations between the columns
+
+```{r}
+classeIndex <- which(names(training_2) == "classe")
+classeIndex
+correlations <- cor(training_2[, -classeIndex], as.numeric(training_2$classe))
+maxCorrelations <- subset(as.data.frame(as.table(correlations)), abs(Freq)>0.25)
+maxCorrelations
+```
+
+4. There is some correlation between the feature: "pitch_forearm" and "magnet_arm_y", let's plot them to visulize them:
+
+```{r}
+
+p1 <- ggplot(training_2, aes(classe,pitch_forearm)) + 
+  geom_boxplot(aes(fill=classe))
+
+p2 <- ggplot(training_2, aes(classe, magnet_arm_y)) + 
+  geom_boxplot(aes(fill=classe))
+
+multiplot(p1,p2,cols=2)
+```
+
+### Summary of data Explorary
+
+So from the plots we can see that there isn't any seperation in the features even the two variable are highly correlated. We can futher use our machine techniques to do the predictions. We will begin with some data cleaning.
+
+## Clean the data
+
+1. Remove the NA values:
+
+```{r}
+training_2 <- training_1[, colSums(is.na(training_1)) == 0] 
+testing_2  <- test_1[, colSums(is.na(test_1)) == 0] 
+dim(training_2)
+```
+
+2. Further slice the training data into test-validation test set:
+
+```{r}
+set.seed(334)
+inTrain <- createDataPartition(training_2$classe, p=0.70, list=F)
+trainData <- training_2[inTrain, ]
+testData <- training_2[-inTrain, ]
+dim(trainData)
+```
+
+
+### PCA method
+
+Since there are many features, we will use Random Forest algorithm because it automatically selects most relavant features and is robust to correlated covariates & outliers in general. We will use 5-fold cross validation when applying the algorithm.
+
+```{r}
+library(randomForest)
+rf_model <-train( classe ~ ., data=trainData, method="rf",
+                 trControl=trainControl(method="cv",number=5),
+                 prox=TRUE, allowParallel=TRUE)
+print(rf_model)
+```
+
+The final model is:
+
+```{r}
+print(rf_model$finalModel)
+```
+
+Now, we will test our final model on the testData:
+
+```{r}
+rf_predict <- predict(rf_model, testData)
+confusionMatrix(testData$classe, rf_predict)
+```
+
+We can see that overall accuray for our predictions for the 5-classes are around 98% to 99%.
+
+We can further verify our model on the original test data:
+
+```{r}
+rf_test_2 <- predict(rf_model, testing_2)
+#rf_test_2
+```
+
+Finally, we can print our randomtree model:
+
+```{r}
+# getTree(rf_model$finalModel, k=1)
+```
+

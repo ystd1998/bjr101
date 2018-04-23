@@ -1,0 +1,26 @@
+---
+title: "DataProduct Week2 Project Html"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This is an R Markdown document display Map Leaflet for data product Week2's project.
+
+## Date: `r format(Sys.time(), '%B %d, %Y')`
+
+## Map
+
+```{r, echo=FALSE}
+library(leaflet)
+my_map <- leaflet() %>% 
+  addTiles() %>%
+  addMarkers(lat=37.391348, lng=-121.926125, 
+             popup="Google San Jose Building")
+my_map
+```
+
