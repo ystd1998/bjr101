@@ -9,3 +9,6 @@ sudo apt-get update
 sudo apt-get install -y miktex pandoc
 
 sudo apt-get install texlive-latex-base -y
+
+# install gsl
+sudo apt-get install -y libgsl0-dev gsl-bin
